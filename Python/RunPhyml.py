@@ -20,19 +20,13 @@ parser.add_option("-i","--inputpath",
                   dest = "inputpath",
                   default = "",
                   metavar = "filename",
-                  help = "Directory containing orthodb alignments in phylip format (*.phy) (from ExtractSequences.py) [default = %default]")
+                  help = "Directory containing AA alignments in phylip format (*.aa.phylip) [default = %default]")
 
 parser.add_option("-t","--treefile",
                   dest = "treefile",
                   default = "",
                   metavar = "filename",
                   help = "Starting tree topology [default = %default]")
-
-parser.add_option("-m","--msaprogram",
-                  dest = "msaprogram",
-                  default = "mafft",
-                  metavar = "mafft/muscle/probcons/prank/prographmsa",
-                  help = "MSA program to use [default = %default]")
 
 parser.add_option("-p","--phyml",
                   dest = "phyml",
@@ -44,7 +38,6 @@ parser.add_option("-p","--phyml",
 
 inputpath  = os.path.abspath(options.inputpath)
 treefile   = options.treefile
-msaprogram = options.msaprogram.lower()
 phyml      = options.phyml
 
 ################################################################################################################################  
@@ -80,7 +73,7 @@ def Phyml(inputfile):
 start = time.time()
 
 for filename in os.listdir(inputpath):
-      if (fnmatch(filename,'*.'+msaprogram+'.phylip')):
+      if (fnmatch(filename,'*.aa.phylip')):
             Phyml(filename)
       #
 #
