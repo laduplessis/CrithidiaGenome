@@ -34,15 +34,9 @@ parser.add_option("-c","--ctlpath",
                   metavar = "filename",
                   help = "Directory containing template PAML control files [default = %default]")
 
-parser.add_option("-m","--msaprogram",
-                  dest = "msaprogram",
-                  default = "mafft",
-                  metavar = "mafft/muscle/probcons/prank/prographmsa",
-                  help = "MSA program to use [default = %default]")
-
 parser.add_option("-s","--species",
                   dest = "species",
-                  default = "6",
+                  default = "4",
                   metavar = "integer",
                   help = "Number of species to use (6,5,4) [default = %default]")
 
@@ -64,7 +58,6 @@ parser.add_option("-R","--randstarts",
 inputpath  = os.path.abspath(options.inputpath)
 outputpath = os.path.abspath(options.outputpath)
 ctlpath    = os.path.abspath(options.ctlpath)
-msaprogram = options.msaprogram.lower()
 species    = int(options.species)
 randseed   = int(options.randseed)
 randstarts = int(options.randstarts)
@@ -183,22 +176,23 @@ def MakeBranchSiteTrees4Species(filename):
     """
 
     # Read tree
-    treefile = open(inputpath+'/'+filename[:filename.find('dna')]+'phylip_phyml_tree.txt','r')
+    treefile = open(inputpath+'/'+filename[:filename.find('dna')]+'aa.phylip_phyml_tree.txt','r')
     tree = treefile.readline()
     treefile.close()
 
-    parts       = tree[:-2].replace(',',':').replace(')','').split(':')
-    bimpabr = parts[1]
-    bterrbr = parts[3]
-    aflorbr = parts[5]
-    amellbr = parts[7]
-    interbr = parts[8]
+    parts      = tree[:-2].replace(',',':').replace(')','').split(':')
+    tbruceibr  = parts[1]
+    lmajorbr   = parts[3]
+    cexpoekibr = parts[5]
+    cbombi     = parts[7]
+    interbr    = parts[8]
 
     trees = []
 
+
     # Tree 1: Internal branch under selection
-    tree = "(BIMPA:%s,BTERR:%s,(AFLOR:%s,AMELL:%s):%s);\n" % \
-            (bimpabr, bterrbr, aflorbr, amellbr, interbr+" '#1' ")
+    tree = "(tbrucei:%s,lmajor:%s,(cexpoeki:%s,cbombi:%s):%s);\n" % \
+            (tbruceibr, lmajorbr, cexpoekibr, cbombi, interbr+" '#1' ")
     trees.append(tree)
 
     treefile = open(outputpath+'/'+filename+'_branchsitetrees.txt','w')
@@ -320,8 +314,12 @@ def MakeCladeTrees4Species(filename):
 def MakeBranchSiteTrees(filename):
 
     if (species == 6):
+        sys.stdout.write("Not implemented\n")
+        sys.exit()
         MakeBranchSiteTrees6Species(filename)
     elif (species == 5):
+        sys.stdout.write("Not implemented\n")
+        sys.exit()
         MakeBranchSiteTrees5Species(filename)
     elif (species == 4):
         MakeBranchSiteTrees4Species(filename)
@@ -332,6 +330,9 @@ def MakeBranchSiteTrees(filename):
     
 
 def MakeCladeTrees(filename):
+
+    sys.stdout.write("Not implemented\n")
+    sys.exit()
 
     if (species == 6):
         MakeCladeTrees6Species(filename)
@@ -375,7 +376,7 @@ def MakeSitesCTLFile(filename, ctlfile, winit):
         if (i == 0):
             outfile.write(line[:line.find('=')+1]+' ../'+filename+'\n')
         elif (i == 1):
-            outfile.write(line[:line.find('=')+1]+' ../'+filename[:filename.find('dna')]+'phylip_phyml_tree.txt\n')
+            outfile.write(line[:line.find('=')+1]+' ../'+filename[:filename.find('dna')]+'aa.phylip_phyml_tree.txt\n')
         elif (i == 2):
             outfile.write(line[:line.find('=')+1]+' '+group+'_'+runname+'.out\n')
         elif (line[:line.find('=')].strip() == 'omega'):
@@ -467,22 +468,22 @@ if (randstarts > 0):
 
 # Do different starting values for models where omega is not fixed (some may get stuck in local optima)
 for filename in os.listdir(inputpath):
-      if (fnmatch(filename,'*.'+msaprogram+'.dna.phylip')):
+      if (fnmatch(filename,'*.dna.phylip')):
             sys.stdout.write(filename+'\n')
             shutil.copy(inputpath+'/'+filename, outputpath+'/'+filename)
-            shutil.copy(inputpath+'/'+filename[:filename.find('dna')]+'phylip_phyml_tree.txt', 
-                        outputpath+'/'+filename[:filename.find('dna')]+'phylip_phyml_tree.txt')
+            shutil.copy(inputpath+'/'+filename[:filename.find('dna')]+'aa.phylip_phyml_tree.txt', 
+                        outputpath+'/'+filename[:filename.find('dna')]+'aa.phylip_phyml_tree.txt')
 
             MakeBranchSiteTrees(filename)
-            MakeCladeTrees(filename)
+            #MakeCladeTrees(filename)
 
             MakeSitesCTLFile(filename,  'M8A.ctl', 1)
             MakeBranchCTLFile(filename, 'BranchSiteNull.ctl', 'branchsite',1)
             for w in wvals:
                 MakeSitesCTLFile(filename,  'Sites.ctl', w)    
                 MakeBranchCTLFile(filename, 'BranchSiteAlt.ctl',  'branchsite', w)
-                MakeBranchCTLFile(filename, 'CladeC.ctl', 'clade', w)
-                MakeBranchCTLFile(filename, 'CladeD.ctl', 'clade', w)
+                #MakeBranchCTLFile(filename, 'CladeC.ctl', 'clade', w)
+                #MakeBranchCTLFile(filename, 'CladeD.ctl', 'clade', w)
             #
       #
 #
