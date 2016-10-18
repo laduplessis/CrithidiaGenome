@@ -77,7 +77,7 @@ def SitesModel(pattern):
 
       for filename in os.listdir(inputpath):
             if (fnmatch(filename,'*_'+pattern)):
-                  name = filename[:filename.find('.')]
+                  name = filename[:filename.find('_')]
                   sys.stdout.write(name+'\n')
 
                   pamlfile = open(inputpath+'/'+filename+'/'+filename+'.out','r')
@@ -148,7 +148,7 @@ def M8AModel():
 
       for filename in os.listdir(inputpath):
             if (fnmatch(filename,'*_M8A-1.000')):
-                  name = filename[:filename.find('.')]
+                  name = filename[:filename.find('_')]
                   sys.stdout.write(name+'\n')
 
                   pamlfile = open(inputpath+'/'+filename+'/'+filename+'.out','r')
@@ -177,7 +177,7 @@ def BranchSite(pattern):
       trees = []
       for filename in os.listdir(inputpath):
             if (fnmatch(filename,'*_'+pattern)):
-                  name = filename[:filename.find('.')]
+                  name = filename[:filename.find('_')]
                   sys.stdout.write(name+'\n')
 
                   pamlfile = open(inputpath+'/'+filename+'/'+filename+'.out','r')
@@ -232,7 +232,7 @@ def Clade(pattern):
       trees = []
       for filename in os.listdir(inputpath):
             if (fnmatch(filename,'*_'+pattern)):
-                  name = filename[:filename.find('.')]
+                  name = filename[:filename.find('_')]
                   sys.stdout.write(name+'\n')
 
                   pamlfile = open(inputpath+'/'+filename+'/'+filename+'.out','r')

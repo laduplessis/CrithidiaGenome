@@ -4,19 +4,12 @@
 cat('Reading 4 species case\n')
 data.4species <- read4Species(path4, run, alpha)
 
-cat('\nReading 5 species case\n')
-data.5species <- read5Species(path5, run, alpha)
+stop()
 
 dir.create(outpath, showWarnings=FALSE)
 dir.create(paste(outpath,'Venn/'  ,sep=''), showWarnings=FALSE)
-dir.create(paste(outpath,'M8_4taxa/',sep=''), showWarnings=FALSE)
-dir.create(paste(outpath,'M8_5taxa/',sep=''), showWarnings=FALSE)
-dir.create(paste(outpath,'CladeD_Bombus_Apis/',sep=''), showWarnings=FALSE)
-dir.create(paste(outpath,'CladeD_Social_Non/' ,sep=''), showWarnings=FALSE)
-#dir.create(paste(outpath,'CladeC_Bombus_Apis/',sep=''), showWarnings=FALSE)
-#dir.create(paste(outpath,'CladeC_Social_Non/' ,sep=''), showWarnings=FALSE)
-dir.create(paste(outpath,'Tables_4taxa/', sep=''), showWarnings=FALSE)
-dir.create(paste(outpath,'Tables_5taxa/', sep=''), showWarnings=FALSE)
+dir.create(paste(outpath,'M8/',sep=''), showWarnings=FALSE)
+dir.create(paste(outpath,'Tables/', sep=''), showWarnings=FALSE)
 
 
 
@@ -67,9 +60,7 @@ dir.create(paste(outpath,'Tables_5taxa/', sep=''), showWarnings=FALSE)
 
 # Slowest and Fastest 10 genes (M0 model)
   M0.slowest.4species <- data.4species$models$M0[order(data.4species$models$M0$w0)[1:30],c(1,3,6)]
-  M0.slowest.5species <- data.5species$models$M0[order(data.5species$models$M0$w0)[1:30],c(1,3,6)]
   M0.fastest.4species <- data.4species$models$M0[order(data.4species$models$M0$w0, decreasing=TRUE)[1:30],c(1,3,6)]
-  M0.fastest.5species <- data.5species$models$M0[order(data.5species$models$M0$w0, decreasing=TRUE)[1:30],c(1,3,6)]
 
   slowestfastest.title  <- expression("OrthoDB group"^a, "Gene"^b~"                              ", "Classification                                                     ", "Global"~omega^c,"Tree Length"^d~" ")
   slowestfastest.foot   <- expression(""^a~"Group identifiers are from OrthoDB 6 (http://cegg.unige.ch/orthodb6).",
@@ -85,14 +76,6 @@ dir.create(paste(outpath,'Tables_5taxa/', sep=''), showWarnings=FALSE)
                                                       caption = "The 30 fastest evolving genes on the 4 taxa tree as determined by the M0 model",
                                                       title = slowestfastest.title, footnotes = slowestfastest.foot,  col=4, draw=FALSE)
   
-  M0.slowest.5species.table <- makeTable(expandLabels(M0.slowest.5species, data.5species$groups),             
-                                                      caption = "The 30 slowest evolving genes on the 5 taxa tree as determined by the M0 model",
-                                                      title = slowestfastest.title, footnotes = slowestfastest.foot,  col=1, draw=FALSE)
-  
-  M0.fastest.5species.table <- makeTable(expandLabels(M0.fastest.5species, data.5species$groups),             
-                                                      caption = "The 30 fastest evolving genes on the 5 taxa tree as determined by the M0 model",
-                                                      title = slowestfastest.title, footnotes = slowestfastest.foot,  col=4, draw=FALSE)  
-  
 
 # Positive selection on whole gene
   pos.4species <- getSignificant(data.4species$tests$M2avsM1a) | 
@@ -102,16 +85,9 @@ dir.create(paste(outpath,'Tables_5taxa/', sep=''), showWarnings=FALSE)
   if (!identical(pos.4species, getSignificant(data.4species$tests$M8vsM7))) 
     cat("M8 vs M7 does not encompass other tests for positive selection (4 species)\n")
   
-  pos.5species <- getSignificant(data.5species$tests$M2avsM1a) | 
-                  getSignificant(data.5species$tests$M8vsM7)   | 
-                  getSignificant(data.5species$tests$M8vsM8a)
-  
-  if (!identical(pos.5species, getSignificant(data.5species$tests$M8vsM7))) 
-    cat("M8 vs M7 does not encompass other tests for positive selection (5 species)\n")
   
   M8.4species.sig <- extractM8(data.4species$models$M8, data.4species$alignments, data.4species$tests$M8vsM7)
-  M8.5species.sig <- extractM8(data.5species$models$M8, data.5species$alignments, data.5species$tests$M8vsM7)
-
+  
   possel.title <- expression("OrthoDB Group"^a~" ", "Gene"^b~"                              ", "Classification                                                     ", 
                              "Sites"^c, italic(p)*"-value"^d, italic(q)*"-value"^e, "Positively selected sites"^f~"                                                           ")
   possel.foot  <- expression(""^a~"Group identifiers are from OrthoDB 6 (http://cegg.unige.ch/orthodb6).",
@@ -127,26 +103,10 @@ dir.create(paste(outpath,'Tables_5taxa/', sep=''), showWarnings=FALSE)
                                                               title   = possel.title, footnotes = possel.foot,            
                                                               col=5, floatcols=c(5,6), justcol=7, maxwidth=50, draw=FALSE)
 
-  M8.5species.sig.table <- makeTable(getPositiveSelectionTable(path5, run, 'M8', M8.5species.sig, data.5species$groups, 0.75, 0.95), 
-                                                              caption = "Genes under positive selection (using FDR < 0.05) across the whole phylogeny (5 taxa tree)", 
-                                                              title   = possel.title, footnotes = possel.foot,            
-                                                              col=5, floatcols=c(5,6), justcol=7, maxwidth=50, draw=FALSE)
-
-
-  # Overlap between genes under positive selection in 4 and 5 taxa cases
-  venn.diagram(list("5 Taxa"=rownames(M8.5species.sig), "4 Taxa"=rownames(M8.4species.sig)),
-               filename=paste(outpath,'Venn/PositiveSelection_sig.tiff',sep='/'), col="black", lty=1, lwd=4, margin=0.15,
-               fill=pal.dark[c(1,3)], alpha=0.50, cex=2.5, fontfamily="sans", fontface="bold", 
-               cat.cex=2, cat.fontfamily="sans", cat.fontface="bold", cat.pos=c(315,45), cat.dist=c(0.12,0.12))
 
 
   for (gene in rownames(M8.4species.sig))
       plotM8BEB(path4, run, gene, data.4species$groups, 0.75, 0.95, paste(outpath,'M8_4taxa/M8.4species.sig.',gene, '.pdf', sep=''))
-
-  for (gene in rownames(M8.5species.sig))
-      plotM8BEB(path5, run, gene, data.5species$groups, 0.75, 0.95, paste(outpath,'M8_5taxa/M8.5species.sig.',gene, '.pdf', sep=''))  
-
-
 
 
 #############################################################################################

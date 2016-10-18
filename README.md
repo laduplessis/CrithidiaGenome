@@ -8,7 +8,6 @@ Use these scripts at your own risk! They may need some tweaks or fixes for diffe
 ## Example workflows 
 
 
-
 ## Python scripts
 
 Pre-processing was already done by the GDC. Assume we start with coding sequence alignments of 4 taxa (tbrucei, lmajor, cbombi, cexpoeki). 
@@ -49,7 +48,6 @@ Pre-processing was already done by the GDC. Assume we start with coding sequence
 	- Clade models C and D (not used)
 
 	Trees for branch-site and clade models are hardcoded for 4- and 5-taxa trees in the paper (but can be easily changed).
-
 
 - ExtractParameter.py:
 	Extract parameters from the PAML output files into easily readable csv files.

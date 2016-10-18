@@ -425,7 +425,7 @@ plotCladeInverted <- function(Clade, M8, BS, pattern='', outfile='', split=2) {
 
 read4Species <- function(basepath, run, alpha) {
   
-    resultpath <- paste(basepath,"PAML_",run,"_Results/",sep="")  
+    resultpath <- paste0(basepath,"PAML_",run,"_Results/")  
     
     #############################################################################################
     # Read data from PAML
@@ -439,14 +439,11 @@ read4Species <- function(basepath, run, alpha) {
       
       BSAlt  <- read.table(paste(resultpath,'BranchSiteAlt-Best.Tree1.w',sep=''),header=TRUE)
       BSNull <- read.table(paste(resultpath,'BranchSiteNull-1.000.Tree1.w',sep=''),header=TRUE)
-      CladeC <- read.table(paste(resultpath,'CladeC-Best.Tree1.w',sep=''),header=TRUE)
-      CladeD <- read.table(paste(resultpath,'CladeD-Best.Tree1.w',sep=''),header=TRUE)
-    
-    # Read alignment data
-      alignments <- read.table(paste(resultpath,"/Alignments.csv",sep=''),header=TRUE)
-      groups     <- read.table(paste(basepath, 'Groups_Final.csv',sep=''), header=TRUE, sep=',', as.is=TRUE)
-
-    
+      
+      # Read alignment data
+      #alignments <- read.table(paste(resultpath,"/Alignments.csv",sep=''),header=TRUE)
+      #groups     <- read.table(paste(basepath, 'Groups_Final.csv',sep=''), header=TRUE, sep=',', as.is=TRUE)
+      
     
     #############################################################################################
     # Perform tests
@@ -465,131 +462,22 @@ read4Species <- function(basepath, run, alpha) {
       M8vsM8a <- doLRT(M8, M8a, c(0,2), alpha)
   
   # Branch-site model
-      cat("Branch-site test for positive selection (branch between Bombus and Apis under selection)\n")
+      cat("Branch-site test for positive selection (branch to Crithidia)\n")
       BStest <- doLRT(BSAlt, BSNull, c(0,1), alpha)
   
-  # Clade model
-      cat("Clade model C (Bombus and Apis in different clades)\n")
-      CladetestC <- doLRT(CladeC,M1a, 3, alpha)
-  
-      cat("Clade model D (Bombus and Apis in different clades)\n")
-      CladetestD <- doLRT(CladeD,M3, 1, alpha)
-
   #############################################################################################
   # Build data structure
   
   models <- list(M0=M0, M1a=M1a, M2a=M2a, M3=M3, M7=M7, M8=M8, M8a=M8a, 
-                 BSAlt=BSAlt, BSNull=BSNull, CladeC=CladeC, CladeD=CladeD)
+                 BSAlt=BSAlt, BSNull=BSNull)
   tests  <- list(M3vsM0=M3vsM0, M2avsM1a=M2avsM1a, M8vsM7=M8vsM7, M8vsM8a=M8vsM8a,
-                 BStest=BStest, CladetestC=CladetestC, CladetestD=CladetestD)
+                 BStest=BStest)
     
-  return(list(models=models, tests=tests, alignments=alignments, groups=groups))
+  #return(list(models=models, tests=tests, alignments=alignments, groups=groups))
+  return(list(models=models, tests=tests))
 }
 
 
 
-read5Species <- function(basepath, run, alpha) {
-  
-  resultpath <- paste(basepath,"PAML_",run,"_Results/",sep="")
-  
-  #############################################################################################
-  # Read data from PAML
-      M0  <- read.table(paste(resultpath,'Sites-Best.M0.w',sep=''),header=TRUE)
-      M1a <- read.table(paste(resultpath,'Sites-Best.M1.w',sep=''),header=TRUE)
-      M2a <- read.table(paste(resultpath,'Sites-Best.M2.w',sep=''),header=TRUE)
-      M3  <- read.table(paste(resultpath,'Sites-Best.M3.w',sep=''),header=TRUE)
-      M7  <- read.table(paste(resultpath,'Sites-Best.M7.w',sep=''),header=TRUE)
-      M8  <- read.table(paste(resultpath,'Sites-Best.M8.w',sep=''),header=TRUE)
-      M8a <- read.table(paste(resultpath,'Sites.M8A-1.000.w',sep=''),header=TRUE)
-      
-      BSAltTree1  <- read.table(paste(resultpath,'BranchSiteAlt-Best.Tree1.w',sep=''),header=TRUE)
-      BSNullTree1 <- read.table(paste(resultpath,'BranchSiteNull-1.000.Tree1.w',sep=''),header=TRUE)
-      BSAltTree2  <- read.table(paste(resultpath,'BranchSiteAlt-Best.Tree2.w',sep=''),header=TRUE)
-      BSNullTree2 <- read.table(paste(resultpath,'BranchSiteNull-1.000.Tree2.w',sep=''),header=TRUE)
-      BSAltTree3  <- read.table(paste(resultpath,'BranchSiteAlt-Best.Tree3.w',sep=''),header=TRUE)
-      BSNullTree3 <- read.table(paste(resultpath,'BranchSiteNull-1.000.Tree3.w',sep=''),header=TRUE)
-      BSAltTree4  <- read.table(paste(resultpath,'BranchSiteAlt-Best.Tree4.w',sep=''),header=TRUE)
-      BSNullTree4 <- read.table(paste(resultpath,'BranchSiteNull-1.000.Tree4.w',sep=''),header=TRUE)
-      BSAltTree5  <- read.table(paste(resultpath,'BranchSiteAlt-Best.Tree5.w',sep=''),header=TRUE)
-      BSNullTree5 <- read.table(paste(resultpath,'BranchSiteNull-1.000.Tree5.w',sep=''),header=TRUE)
-  
-      CladeCTree1  <- read.table(paste(resultpath,'CladeC-Best.Tree1.w',sep=''),header=TRUE)
-      CladeCTree2  <- read.table(paste(resultpath,'CladeC-Best.Tree2.w',sep=''),header=TRUE)
-      CladeDTree1  <- read.table(paste(resultpath,'CladeD-Best.Tree1.w',sep=''),header=TRUE)
-      CladeDTree2  <- read.table(paste(resultpath,'CladeD-Best.Tree2.w',sep=''),header=TRUE)
-  
-  # Read alignment data
-      alignments <- read.table(paste(resultpath,"/Alignments.csv",sep=''),header=TRUE)
-      groups     <- read.table(paste(basepath, 'Groups_Final.csv',sep=''),header=TRUE, sep=',', as.is=TRUE)
-  
-  
-  #############################################################################################
-  # Perform tests
-  
-  # Site models
-      cat("M3 vs M0: Look for site-to-site variation in omega\n")
-      M3vsM0 <- doLRT(M3, M0, 4, alpha)
-      
-      cat("M2a vs M1a: Conservative test for positive selection\n")
-      M2avsM1a <- doLRT(M2a, M1a, 2, alpha)
-      
-      cat("M8 vs M7: Less conservative test for positive selection\n")
-      M8vsM7 <- doLRT(M8, M7, 2, alpha)
-      
-      cat("M8 vs M8a: Test for positive selection (check fit of beta distribution)\n")
-      M8vsM8a <- doLRT(M8, M8a, c(0,2), alpha)
-  
-  # Branch-site model
-      cat("Branch-site test for positive selection (Tree 1: All 3 internal branches under positive selection)\n")
-      BStest1 <- doLRT(BSAltTree1, BSNullTree1, c(0,1), alpha)
-      
-      cat("Branch-site test for positive selection (Tree 2: 2 branches between Bombus and Apis under positive selection)\n")
-      BStest2 <- doLRT(BSAltTree2, BSNullTree2, c(0,1), alpha)
-      
-      cat("Branch-site test for positive selection (Tree 3: Branch to Megachile under positive selection)\n")
-      BStest3 <- doLRT(BSAltTree3, BSNullTree3, c(0,1), alpha)
-      
-      cat("Branch-site test for positive selection (Tree 4: Branch to Bombus under positive selection)\n")
-      BStest4 <- doLRT(BSAltTree4, BSNullTree4, c(0,1), alpha)
-  
-      cat("Branch-site test for positive selection (Tree 5: Branch to Apis under positive selection)\n")
-      BStest5 <- doLRT(BSAltTree5, BSNullTree5, c(0,1), alpha)
-  
-  
-  # Clade model C
-      cat("Clade model C (2 clades compared to no clades - social/solitary)\n")
-      CladeCtest1 <- doLRT(CladeCTree1,M1a, 3, alpha)
-      
-      cat("Clade model C (3 clades compared to no clades)\n")
-      CladeCtest2 <- doLRT(CladeCTree2,M1a, 4, alpha)
-      
-      cat("Clade model C (3 clades compared to 2 clades)\n")
-      CladeCtest3 <- doLRT(CladeCTree2, CladeCTree1, 1, alpha)
-  
-  
-  # Clade model D
-      cat("Clade model D (2 clades compared to no clades - social/solitary)\n")
-      CladeDtest1 <- doLRT(CladeDTree1,M3, 1, alpha)
-      
-      cat("Clade model D (3 clades compared to no clades)\n")
-      CladeDtest2 <- doLRT(CladeDTree2,M3, 2, alpha)
-      
-      cat("Clade model D (3 clades compared to 2 clades)\n")
-      CladeDtest3 <- doLRT(CladeDTree2, CladeDTree1, 1, alpha)
-  
-  
-  #############################################################################################
-  # Build data structure
-  
-  models <- list(M0=M0, M1a=M1a, M2a=M2a, M3=M3, M7=M7, M8=M8, M8a=M8a, 
-                 BSAltTree1=BSAltTree1, BSAltTree2=BSAltTree2, BSAltTree3=BSAltTree3, BSAltTree4=BSAltTree4, BSAltTree5=BSAltTree5, 
-                 BSNullTree1=BSNullTree1, BSNullTree2=BSNullTree2, BSNullTree3=BSNullTree3, BSNullTree4=BSNullTree4, BSNullTree5=BSNullTree5,
-                 CladeCTree1=CladeCTree1, CladeCTree2=CladeCTree2, CladeDTree1=CladeDTree1, CladeDTree2=CladeDTree2)
-  tests  <- list(M3vsM0=M3vsM0, M2avsM1a=M2avsM1a, M8vsM7=M8vsM7, M8vsM8a=M8vsM8a,
-                 BStest1=BStest1, BStest2=BStest2, BStest3=BStest3, BStest4=BStest4, BStest5=BStest5,
-                 CladeCtest1=CladeCtest1, CladeCtest2=CladeCtest2, CladeCtest3=CladeCtest3,
-                 CladeDtest1=CladeDtest1, CladeDtest2=CladeDtest2, CladeDtest3=CladeDtest3)
-    
-  return(list(models=models, tests=tests, alignments=alignments, groups=groups))
-}
+
 
