@@ -63,6 +63,8 @@ randseed   = int(options.randseed)
 randstarts = int(options.randstarts)
 
 
+codeml_brutus = '/cluster/home/dlouis/paml4.9c/bin/codeml'
+
 ################################################################################################################################  
 
 def MakeBranchSiteTrees6Species(filename):
@@ -394,8 +396,12 @@ def MakeSitesCTLFile(filename, ctlfile, winit):
 
     brutusscript = open(outputpath+'/'+runname+'.brutus.sh','a')
     brutusscript.write('cd '+group+'_'+runname+"\nbsub -W%d:0 -R 'rusage[mem=1024]' -o %s" % (8, group+'_'+runname+'.brutus.out'))
-    brutusscript.write(' ~/paml44/bin/codeml '+group+'_'+runname+'.ctl\ncd ..\n')
+    brutusscript.write(' '+codeml_brutus+' '+group+'_'+runname+'.ctl\ncd ..\n')
     brutusscript.close()
+
+    brutuscleanup = open(outputpath+'/'+runname+'.brutusclean.sh','a')
+    brutuscleanup.write('rm '+group+'_'+runname+"/*.brutus.out\n")
+    brutuscleanup.close()
 #
 
 
@@ -438,8 +444,12 @@ def MakeBranchCTLFile(filename, ctlfile, cladebranch, winit):
 
     brutusscript = open(outputpath+'/'+runname+'.brutus.sh','a')
     brutusscript.write('cd '+group+'_'+runname+"\nbsub -W%d:0 -R 'rusage[mem=1024]' -o %s" % (1, group+'_'+runname+'.brutus.out'))
-    brutusscript.write(' ~/paml44/bin/codeml '+group+'_'+runname+'.ctl\ncd ..\n')
+    brutusscript.write(' '+codeml_brutus+' '+group+'_'+runname+'.ctl\ncd ..\n')
     brutusscript.close()
+
+    brutuscleanup = open(outputpath+'/'+runname+'.brutusclean.sh','a')
+    brutuscleanup.write('rm '+group+'_'+runname+"/*.brutus.out\n")
+    brutuscleanup.close()
 #
 
 

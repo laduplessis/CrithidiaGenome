@@ -2,7 +2,7 @@
      treefile =
       outfile =
 
-        noisy = 3
+        noisy = 1
       verbose = 0
       runmode = 0
 
