@@ -21,7 +21,7 @@ for (i in 1:6) {
   pal.trans[i] <- paste(pal.trans[i],"88",sep='')
 }
 
-run     <- "pranksmall"
+run     <- "prank-relaxed"
 outpath <- paste0("~/Documents/Projects/Crithidia/Data/",run,"Analysis")
 source(paste(scriptpath,'GetOutput.R',sep='/'))
 

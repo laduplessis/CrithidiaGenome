@@ -180,14 +180,15 @@ for filename in os.listdir(inputpath):
             # (on DNA MSA this time)
             if (gblockspars == "strict"):
                   strict = '-t=c -p=t -b3=8  -b4=10 -b5=n'
-                  runGblocks(inputputpath+filename, strict)
-                  dnamsa = AlignIO.read(inputpath+filename+' -gb','fasta')
+                  runGblocks(inputpath+filename, strict)
+                  dnamsa = AlignIO.read(inputpath+filename+'-gb','fasta')
 
             elif (gblockspars == "relaxed"): 
+                  dnamsa = AlignIO.read(inputpath+filename,"fasta")
                   n = math.floor(len(dnamsa)/2+1)
                   relaxed = '-t=c -p=t -b2=%d -b3=10 -b4=5  -b5=h' % n
-                  runGblocks(inputputpath+filename, strict)
-                  dnamsa = AlignIO.read(inputpath+filename+' -gb','fasta')
+                  runGblocks(inputpath+filename, relaxed)
+                  dnamsa = AlignIO.read(inputpath+filename+'-gb','fasta')
 
             else:
                   sys.stdout.write("\tUnknown Gblocks parameters, not trimming\n")
