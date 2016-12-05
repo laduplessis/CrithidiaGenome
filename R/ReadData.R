@@ -441,7 +441,7 @@ read4Species <- function(basepath, run, alpha) {
       BSNull <- read.table(paste(resultpath,'BranchSiteNull-1.000.Tree1.w',sep=''),header=TRUE)
       
       # Read alignment data
-      #alignments <- read.table(paste(resultpath,"/Alignments.csv",sep=''),header=TRUE)
+      alignments <- read.table(paste(resultpath,"/Alignments.csv",sep=''),header=TRUE)
       #groups     <- read.table(paste(basepath, 'Groups_Final.csv',sep=''), header=TRUE, sep=',', as.is=TRUE)
       
     
@@ -474,7 +474,7 @@ read4Species <- function(basepath, run, alpha) {
                  BStest=BStest)
     
   #return(list(models=models, tests=tests, alignments=alignments, groups=groups))
-  return(list(models=models, tests=tests))
+  return(list(models=models, tests=tests, alignments=alignments))
 }
 
 

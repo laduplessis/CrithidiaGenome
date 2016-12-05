@@ -203,6 +203,18 @@ extractM8 <- function(M8, Alignments, Test) {
   return(M8summary)
 }
 
+# Add alignment info to M0
+extractM0 <- function(M0, Alignments) {
+  lenids <- c()
+  for (i in 1:nrow(M0)) {
+    lenids  <- c(lenids, which(Alignments[,1] == M0[i,1]))
+  }
+  M0summary <- cbind(M0, Alignments[lenids,2])
+  colnames(M0summary) <- c(colnames(M0), "Length")
+  
+  return(M0summary[order(M0summary$w0, decreasing = TRUE),])
+}
+
 
 
 
