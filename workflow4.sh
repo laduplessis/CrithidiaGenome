@@ -8,39 +8,39 @@
 #		Rename sequences and save alignments in Phylip format
 
 # No trimming
-python GetNewAlignments.py -i ../Data/prank/ -l 100
+python GetNewAlignments.py -i ../Results4Species/prank/ -l 100
 
 # Gblocks strict
-python2.7 GetNewAlignments.py -i ../Data/prank/ -l 100 -g strict
+python2.7 GetNewAlignments.py -i ../Results4Species/prank/ -l 100 -g strict
 
 # Gblocks relaxed
-python2.7 GetNewAlignments.py -i ../Data/prank-relaxed/ -l 100 -g relaxed
+python2.7 GetNewAlignments.py -i ../Results4Species/prank-relaxed/ -l 100 -g relaxed
 
 
 #####################################################################################################################################################
 # 4) Get trees (based on AA sequences)
 
 # No trimming
-python RunPhyml.py -i ../Data/prank/ -p ~/Documents/Packages/PhyML-3.1/PhyML-3.1_macOS-MountainLion -t ../Data/InputTree4.txt 
+python RunPhyml.py -i ../Results4Species/prank/ -p ~/Documents/Packages/PhyML-3.1/PhyML-3.1_macOS-MountainLion -t ../Data4Species/InputTree4.txt 
 
 # Gblocks strict
-python2.7 RunPhyml.py -i ../Data/prank-strict/ -p ~/Documents/Packages/PhyML-3.1/PhyML-3.1_macOS-MountainLion -t ../Data/InputTree4.txt 
+python2.7 RunPhyml.py -i ../Results4Species/prank-strict/ -p ~/Documents/Packages/PhyML-3.1/PhyML-3.1_macOS-MountainLion -t ../Data4Species/InputTree4.txt 
 
 # Gblocks relaxed
-python2.7 RunPhyml.py -i ../Data/prank-relaxed/ -p ~/Documents/Packages/PhyML-3.1/PhyML-3.1_macOS-MountainLion -t ../Data/InputTree4.txt 
+python2.7 RunPhyml.py -i ../Results4Species/prank-relaxed/ -p ~/Documents/Packages/PhyML-3.1/PhyML-3.1_macOS-MountainLion -t ../Data4Species/InputTree4.txt 
 
 
 #####################################################################################################################################################
 # 5) Make PAML control files
 
 # No trimming
-python SetupPAML.py -i ../Data/prank/ -o ../Data/PAML_prank/ -c ../Data/PAML_Templates/ -s 4 -R 3 -r 25
+python SetupPAML.py -i ../Results4Species/prank/ -o ../Results4Species/PAML_prank/ -c ../Data/PAML_Templates/ -s 4 -R 3 -r 25
 
 # Gblocks strict
-python SetupPAML.py -i ../Data/prank-strict/ -o ../Data/PAML_prank-strict/ -c ../Data/PAML_Templates/ -s 4 -R 3 -r 25
+python SetupPAML.py -i ../Results4Species/prank-strict/ -o ../Results4Species/PAML_prank-strict/ -c ../Data/PAML_Templates/ -s 4 -R 3 -r 25
 
 # Gblocks relaxed
-python SetupPAML.py -i ../Data/prank-relaxed/ -o ../Data/PAML_prank-relaxed/ -c ../Data/PAML_Templates/ -s 4 -R 3 -r 25
+python SetupPAML.py -i ../Results4Species/prank-relaxed/ -o ../Results4Species/PAML_prank-relaxed/ -c ../Data/PAML_Templates/ -s 4 -R 3 -r 25
 
 
 #####################################################################################################################################################
@@ -54,26 +54,26 @@ python SetupPAML.py -i ../Data/prank-relaxed/ -o ../Data/PAML_prank-relaxed/ -c 
 # 7) Extract the parameters found by PAML for each of the models
 
 # No trimming
-python ExtractParameters.py -i ../Data/PAML_prank/ -o ../Data/PAML_prank_Results/
+python ExtractParameters.py -i ../Results4Species/PAML_prank/ -o ../Results4Species/PAML_prank_Results/
 
 # Gblocks strict
-python ExtractParameters.py -i ../Data/PAML_prank-strict/ -o ../Data/PAML_prank-strict_Results/
+python ExtractParameters.py -i ../Results4Species/PAML_prank-strict/ -o ../Results4Species/PAML_prank-strict_Results/
 
 # Gblocks relaxed
-python ExtractParameters.py -i ../Data/PAML_prank-relaxed/ -o ../Data/PAML_prank-relaxed_Results/
+python ExtractParameters.py -i ../Results4Species/PAML_prank-relaxed/ -o ../Results4Species/PAML_prank-relaxed_Results/
 
 
 #####################################################################################################################################################
 # 8) Extract the best run
 
 # No trimming
-python ExtractBest.py -i ../Data/PAML_prank_Results/
+python ExtractBest.py -i ../Results4Species/PAML_prank_Results/
 
 # Gblocks strict
-python ExtractBest.py -i ../Data/PAML_prank-strict_Results/
+python ExtractBest.py -i ../Results4Species/PAML_prank-strict_Results/
 
 # Gblocks relaxed
-python ExtractBest.py -i ../Data/PAML_prank-relaxed_Results/
+python ExtractBest.py -i ../Results4Species/PAML_prank-relaxed_Results/
 
 
 # #####################################################################################################################################################

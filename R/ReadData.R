@@ -429,15 +429,24 @@ read4Species <- function(basepath, run, alpha) {
     
     #############################################################################################
     # Read data from PAML
+      print("Reading M0...")
       M0  <- read.table(paste(resultpath,'Sites-Best.M0.w',sep=''),header=TRUE)
+      print("Reading M1a...")
       M1a <- read.table(paste(resultpath,'Sites-Best.M1.w',sep=''),header=TRUE)
+      print("Reading M2a...")
       M2a <- read.table(paste(resultpath,'Sites-Best.M2.w',sep=''),header=TRUE)
+      print("Reading M3...")
       M3  <- read.table(paste(resultpath,'Sites-Best.M3.w',sep=''),header=TRUE)
+      print("Reading M7...")
       M7  <- read.table(paste(resultpath,'Sites-Best.M7.w',sep=''),header=TRUE)
+      print("Reading M8...")
       M8  <- read.table(paste(resultpath,'Sites-Best.M8.w',sep=''),header=TRUE)
+      print("Reading M8a...")
       M8a <- read.table(paste(resultpath,'Sites.M8A-1.000.w',sep=''),header=TRUE)
       
+      print("Reading BSAlt...")
       BSAlt  <- read.table(paste(resultpath,'BranchSiteAlt-Best.Tree1.w',sep=''),header=TRUE)
+      print("Reading BSNull...")
       BSNull <- read.table(paste(resultpath,'BranchSiteNull-1.000.Tree1.w',sep=''),header=TRUE)
       
       # Read alignment data

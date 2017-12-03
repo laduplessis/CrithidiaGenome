@@ -6,7 +6,9 @@ from optparse import OptionParser
 
 
 
-# Setup control files for different PAML models and runs
+# Setup control files for different PAML models and runs: 4, 8 and 9 species cases for Crithidia analyses
+#
+# Commented functions (5 and 6 species) are from the Bumblebees analyses. 
 #
 ################################################################################################################################
 # Parameters
@@ -38,7 +40,7 @@ parser.add_option("-s","--species",
                   dest = "species",
                   default = "4",
                   metavar = "integer",
-                  help = "Number of species to use (6,5,4) [default = %default]")
+                  help = "Number of species to use (9,6,5,4) [default = %default]")
 
 parser.add_option("-r","--randseed",
                   dest = "randseed",
@@ -62,115 +64,156 @@ species    = int(options.species)
 randseed   = int(options.randseed)
 randstarts = int(options.randstarts)
 
+#codeml_brutus   = '/cluster/home/dlouis/paml4.9c/bin/codeml'
+codeml_leonhard = '/cluster/home/zollerst/bin/paml4.9e/bin/codeml'
+codeml_euler    = '/cluster/project/gdc/shared/tools/paml4.9e/bin/codeml'
+codeml_gdc      = '/cluster/project/gdc/shared/tools/paml4.9e/bin/codeml'
 
-codeml_brutus = '/cluster/home/dlouis/paml4.9c/bin/codeml'
 
 ################################################################################################################################  
 
-def MakeBranchSiteTrees6Species(filename):
+# def MakeBranchSiteTrees6Species(filename):
+#     """Create trees with switches for PAML analyses for the group in question (for branch-site model)
+
+#     """
+
+#     # Read tree
+#     treefile = open(inputpath+'/'+filename[:filename.find('dna')]+'phylip_phyml_tree.txt','r')
+#     tree = treefile.readline()
+#     treefile.close()
+
+#     parts       = tree[:-2].replace(',',':').replace(')','').split(':')
+#     mrotubr = parts[1]
+#     nvitrbr = parts[3]
+#     bimpabr = parts[5]
+#     bterrbr = parts[7]
+#     aflorbr = parts[10]
+#     amellbr = parts[12]
+
+#     apisbr    = parts[13]
+#     bombusbr  = parts[8]
+#     outlierbr = parts[14] 
+
+#     trees = []
+
+#     # Tree 1: 3 internal branches under selection
+#     tree = "(MROTU:%s,NVITR:%s,((BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s):%s);\n" % \
+#             (mrotubr, nvitrbr, bimpabr, bterrbr, bombusbr+" '#1' ", aflorbr, amellbr, apisbr+" '#1' ", outlierbr+" '#1' ")
+#     trees.append(tree)
+
+#     # Tree 2: 2 internal branches between Apis and Bombus under selection
+#     tree = "(MROTU:%s,NVITR:%s,((BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s):%s);\n" % \
+#             (mrotubr, nvitrbr, bimpabr, bterrbr, bombusbr+" '#1' ", aflorbr, amellbr, apisbr+" '#1' ", outlierbr)
+#     trees.append(tree)
+
+#     # Tree 3: Branch connecting Megachile and Nasonia under selection
+#     tree = "(MROTU:%s,NVITR:%s,((BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s):%s);\n" % \
+#             (mrotubr, nvitrbr, bimpabr, bterrbr, bombusbr, aflorbr, amellbr, apisbr, outlierbr+" '#1' ")
+#     trees.append(tree)
+
+#     # Tree 4: Only Bombus under selection
+#     tree = "(MROTU:%s,NVITR:%s,((BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s):%s);\n" % \
+#             (mrotubr, nvitrbr, bimpabr, bterrbr, bombusbr+" '#1' ", aflorbr, amellbr, apisbr, outlierbr)
+#     trees.append(tree)
+
+#     treefile = open(outputpath+'/'+filename+'_branchsitetrees.txt','w')
+#     for tree in trees:
+#         treefile.write(tree+'\n')
+#     treefile.close()
+# #
+
+# def MakeBranchSiteTrees5Species(filename):
+#     """Create trees with switches for PAML analyses for the group in question (for branch-site model)
+
+#     """
+
+#     # Read tree
+#     treefile = open(inputpath+'/'+filename[:filename.find('dna')]+'phylip_phyml_tree.txt','r')
+#     tree = treefile.readline()
+#     treefile.close()
+
+#     parts       = tree[:-2].replace(',',':').replace(')','').split(':')
+#     mrotubr = parts[1]
+#     bimpabr = parts[3]
+#     bterrbr = parts[5]
+#     aflorbr = parts[8]
+#     amellbr = parts[10]
+
+#     apisbr    = parts[11]
+#     bombusbr  = parts[6]
+
+#     trees = []
+
+#     # Tree 1: 3 internal branches under selection
+#     tree = "(MROTU:%s,(BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s);\n" % \
+#             (mrotubr+" '#1' ", bimpabr, bterrbr, bombusbr+" '#1' ", aflorbr, amellbr, apisbr+" '#1' ")
+#     trees.append(tree)
+
+#     # Tree 2: 2 internal branches between Apis and Bombus under selection
+#     tree = "(MROTU:%s,(BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s);\n" % \
+#             (mrotubr, bimpabr, bterrbr, bombusbr+" '#1' ", aflorbr, amellbr, apisbr+" '#1' ")
+#     trees.append(tree)
+
+#     # Tree 3: Branch connecting Megachile and Nasonia under selection
+#     tree = "(MROTU:%s,(BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s);\n" % \
+#             (mrotubr+" '#1' ", bimpabr, bterrbr, bombusbr, aflorbr, amellbr, apisbr)
+#     trees.append(tree)
+
+#     # Tree 4: Only Bombus under selection
+#     tree = "(MROTU:%s,(BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s);\n" % \
+#             (mrotubr, bimpabr, bterrbr, bombusbr+" '#1' ", aflorbr, amellbr, apisbr)
+#     trees.append(tree)
+
+#     # Tree 5: Only Apis under selection
+#     tree = "(MROTU:%s,(BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s);\n" % \
+#             (mrotubr, bimpabr, bterrbr, bombusbr, aflorbr, amellbr, apisbr+" '#1' ")
+#     trees.append(tree)
+
+
+#     treefile = open(outputpath+'/'+filename+'_branchsitetrees.txt','w')
+#     for tree in trees:
+#         treefile.write(tree+'\n')
+#     treefile.close()
+# #
+
+
+def MakeBranchSiteTrees9Species(filename):
     """Create trees with switches for PAML analyses for the group in question (for branch-site model)
 
     """
 
     # Read tree
-    treefile = open(inputpath+'/'+filename[:filename.find('dna')]+'phylip_phyml_tree.txt','r')
+    treefile = open(inputpath+'/'+filename[:filename.find('dna')]+'aa.phylip_phyml_tree.txt','r')
     tree = treefile.readline()
     treefile.close()
 
-    parts       = tree[:-2].replace(',',':').replace(')','').split(':')
-    mrotubr = parts[1]
-    nvitrbr = parts[3]
-    bimpabr = parts[5]
-    bterrbr = parts[7]
-    aflorbr = parts[10]
-    amellbr = parts[12]
-
-    apisbr    = parts[13]
-    bombusbr  = parts[8]
-    outlierbr = parts[14] 
-
-    trees = []
-
-    # Tree 1: 3 internal branches under selection
-    tree = "(MROTU:%s,NVITR:%s,((BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s):%s);\n" % \
-            (mrotubr, nvitrbr, bimpabr, bterrbr, bombusbr+" '#1' ", aflorbr, amellbr, apisbr+" '#1' ", outlierbr+" '#1' ")
-    trees.append(tree)
-
-    # Tree 2: 2 internal branches between Apis and Bombus under selection
-    tree = "(MROTU:%s,NVITR:%s,((BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s):%s);\n" % \
-            (mrotubr, nvitrbr, bimpabr, bterrbr, bombusbr+" '#1' ", aflorbr, amellbr, apisbr+" '#1' ", outlierbr)
-    trees.append(tree)
-
-    # Tree 3: Branch connecting Megachile and Nasonia under selection
-    tree = "(MROTU:%s,NVITR:%s,((BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s):%s);\n" % \
-            (mrotubr, nvitrbr, bimpabr, bterrbr, bombusbr, aflorbr, amellbr, apisbr, outlierbr+" '#1' ")
-    trees.append(tree)
-
-    # Tree 4: Only Bombus under selection
-    tree = "(MROTU:%s,NVITR:%s,((BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s):%s);\n" % \
-            (mrotubr, nvitrbr, bimpabr, bterrbr, bombusbr+" '#1' ", aflorbr, amellbr, apisbr, outlierbr)
-    trees.append(tree)
+    parts = tree.split(":")
+    parts[10] = parts[10].replace(")", " '#1' )")
+    tree  = ":".join(parts)
 
     treefile = open(outputpath+'/'+filename+'_branchsitetrees.txt','w')
-    for tree in trees:
-        treefile.write(tree+'\n')
+    treefile.write(tree)
     treefile.close()
 #
 
-def MakeBranchSiteTrees5Species(filename):
+def MakeBranchSiteTrees8Species(filename):
     """Create trees with switches for PAML analyses for the group in question (for branch-site model)
 
     """
 
     # Read tree
-    treefile = open(inputpath+'/'+filename[:filename.find('dna')]+'phylip_phyml_tree.txt','r')
+    treefile = open(inputpath+'/'+filename[:filename.find('dna')]+'aa.phylip_phyml_tree.txt','r')
     tree = treefile.readline()
     treefile.close()
 
-    parts       = tree[:-2].replace(',',':').replace(')','').split(':')
-    mrotubr = parts[1]
-    bimpabr = parts[3]
-    bterrbr = parts[5]
-    aflorbr = parts[8]
-    amellbr = parts[10]
-
-    apisbr    = parts[11]
-    bombusbr  = parts[6]
-
-    trees = []
-
-    # Tree 1: 3 internal branches under selection
-    tree = "(MROTU:%s,(BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s);\n" % \
-            (mrotubr+" '#1' ", bimpabr, bterrbr, bombusbr+" '#1' ", aflorbr, amellbr, apisbr+" '#1' ")
-    trees.append(tree)
-
-    # Tree 2: 2 internal branches between Apis and Bombus under selection
-    tree = "(MROTU:%s,(BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s);\n" % \
-            (mrotubr, bimpabr, bterrbr, bombusbr+" '#1' ", aflorbr, amellbr, apisbr+" '#1' ")
-    trees.append(tree)
-
-    # Tree 3: Branch connecting Megachile and Nasonia under selection
-    tree = "(MROTU:%s,(BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s);\n" % \
-            (mrotubr+" '#1' ", bimpabr, bterrbr, bombusbr, aflorbr, amellbr, apisbr)
-    trees.append(tree)
-
-    # Tree 4: Only Bombus under selection
-    tree = "(MROTU:%s,(BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s);\n" % \
-            (mrotubr, bimpabr, bterrbr, bombusbr+" '#1' ", aflorbr, amellbr, apisbr)
-    trees.append(tree)
-
-    # Tree 5: Only Apis under selection
-    tree = "(MROTU:%s,(BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s);\n" % \
-            (mrotubr, bimpabr, bterrbr, bombusbr, aflorbr, amellbr, apisbr+" '#1' ")
-    trees.append(tree)
-
+    parts = tree.split(":")
+    parts[6] = parts[6].replace(",", " '#1' ,")
+    tree  = ":".join(parts)
 
     treefile = open(outputpath+'/'+filename+'_branchsitetrees.txt','w')
-    for tree in trees:
-        treefile.write(tree+'\n')
+    treefile.write(tree)
     treefile.close()
 #
-
 
 def MakeBranchSiteTrees4Species(filename):
     """Create trees with switches for PAML analyses for the group in question (for branch-site model)
@@ -204,114 +247,113 @@ def MakeBranchSiteTrees4Species(filename):
 #
 
 
+# def MakeCladeTrees6Species(filename):
+#     """Create trees with switches for PAML analyses for the group in question (for branch-site model)
 
-def MakeCladeTrees6Species(filename):
-    """Create trees with switches for PAML analyses for the group in question (for branch-site model)
+#     """
 
-    """
+#     # Read tree
+#     treefile = open(inputpath+'/'+filename[:filename.find('dna')]+'phylip_phyml_tree.txt','r')
+#     tree = treefile.readline()
+#     treefile.close()
 
-    # Read tree
-    treefile = open(inputpath+'/'+filename[:filename.find('dna')]+'phylip_phyml_tree.txt','r')
-    tree = treefile.readline()
-    treefile.close()
+#     parts       = tree[:-2].replace(',',':').replace(')','').split(':')
+#     mrotubr = parts[1]
+#     nvitrbr = parts[3]
+#     bimpabr = parts[5]
+#     bterrbr = parts[7]
+#     aflorbr = parts[10]
+#     amellbr = parts[12]
 
-    parts       = tree[:-2].replace(',',':').replace(')','').split(':')
-    mrotubr = parts[1]
-    nvitrbr = parts[3]
-    bimpabr = parts[5]
-    bterrbr = parts[7]
-    aflorbr = parts[10]
-    amellbr = parts[12]
+#     apisbr    = parts[13]
+#     bombusbr  = parts[8]
+#     outlierbr = parts[14] 
 
-    apisbr    = parts[13]
-    bombusbr  = parts[8]
-    outlierbr = parts[14] 
+#     trees = []
 
-    trees = []
+#     # Tree 1: 2 clades
+#     tree = "(MROTU:%s,NVITR:%s,((BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s):%s);\n" % \
+#             (mrotubr, nvitrbr, bimpabr+" '#1' ", bterrbr+" '#1' ", bombusbr+" '#1' ", aflorbr+" '#1' ", amellbr+" '#1' ", apisbr+" '#1' ", outlierbr)
+#     trees.append(tree)
 
-    # Tree 1: 2 clades
-    tree = "(MROTU:%s,NVITR:%s,((BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s):%s);\n" % \
-            (mrotubr, nvitrbr, bimpabr+" '#1' ", bterrbr+" '#1' ", bombusbr+" '#1' ", aflorbr+" '#1' ", amellbr+" '#1' ", apisbr+" '#1' ", outlierbr)
-    trees.append(tree)
+#     # Tree 2: 3 clades
+#     tree = "(MROTU:%s,NVITR:%s,((BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s):%s);\n" % \
+#             (mrotubr, nvitrbr, bimpabr+" '#1' ", bterrbr+" '#1' ", bombusbr+" '#1' ", aflorbr+" '#2' ", amellbr+" '#2' ", apisbr+" '#2' ", outlierbr)
+#     trees.append(tree)
 
-    # Tree 2: 3 clades
-    tree = "(MROTU:%s,NVITR:%s,((BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s):%s);\n" % \
-            (mrotubr, nvitrbr, bimpabr+" '#1' ", bterrbr+" '#1' ", bombusbr+" '#1' ", aflorbr+" '#2' ", amellbr+" '#2' ", apisbr+" '#2' ", outlierbr)
-    trees.append(tree)
+#     treefile = open(outputpath+'/'+filename+'_cladetrees.txt','w')
+#     for tree in trees:
+#         treefile.write(tree+'\n')
+#     treefile.close()
+# #
 
-    treefile = open(outputpath+'/'+filename+'_cladetrees.txt','w')
-    for tree in trees:
-        treefile.write(tree+'\n')
-    treefile.close()
-#
+# def MakeCladeTrees5Species(filename):
+#     """Create trees with switches for PAML analyses for the group in question (for branch-site model)
 
-def MakeCladeTrees5Species(filename):
-    """Create trees with switches for PAML analyses for the group in question (for branch-site model)
+#     """
 
-    """
+#     # Read tree
+#     treefile = open(inputpath+'/'+filename[:filename.find('dna')]+'phylip_phyml_tree.txt','r')
+#     tree = treefile.readline()
+#     treefile.close()
 
-    # Read tree
-    treefile = open(inputpath+'/'+filename[:filename.find('dna')]+'phylip_phyml_tree.txt','r')
-    tree = treefile.readline()
-    treefile.close()
+#     parts       = tree[:-2].replace(',',':').replace(')','').split(':')
+#     mrotubr = parts[1]
+#     bimpabr = parts[3]
+#     bterrbr = parts[5]
+#     aflorbr = parts[8]
+#     amellbr = parts[10]
 
-    parts       = tree[:-2].replace(',',':').replace(')','').split(':')
-    mrotubr = parts[1]
-    bimpabr = parts[3]
-    bterrbr = parts[5]
-    aflorbr = parts[8]
-    amellbr = parts[10]
+#     apisbr    = parts[11]
+#     bombusbr  = parts[6]
 
-    apisbr    = parts[11]
-    bombusbr  = parts[6]
+#     trees = []
 
-    trees = []
+#     # Tree 1: 2 clades
+#     tree = "(MROTU:%s,(BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s);\n" % \
+#             (mrotubr, bimpabr+" '#1' ", bterrbr+" '#1' ", bombusbr+" '#1' ", aflorbr+" '#1' ", amellbr+" '#1' ", apisbr+" '#1' ")
+#     trees.append(tree)
 
-    # Tree 1: 2 clades
-    tree = "(MROTU:%s,(BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s);\n" % \
-            (mrotubr, bimpabr+" '#1' ", bterrbr+" '#1' ", bombusbr+" '#1' ", aflorbr+" '#1' ", amellbr+" '#1' ", apisbr+" '#1' ")
-    trees.append(tree)
+#     # Tree 2: 3 clades
+#     tree = "(MROTU:%s,(BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s);\n" % \
+#             (mrotubr, bimpabr+" '#1' ", bterrbr+" '#1' ", bombusbr+" '#1' ", aflorbr+" '#2' ", amellbr+" '#2' ", apisbr+" '#2' ")
+#     trees.append(tree)
 
-    # Tree 2: 3 clades
-    tree = "(MROTU:%s,(BIMPA:%s,BTERR:%s):%s,(AFLOR:%s,AMELL:%s):%s);\n" % \
-            (mrotubr, bimpabr+" '#1' ", bterrbr+" '#1' ", bombusbr+" '#1' ", aflorbr+" '#2' ", amellbr+" '#2' ", apisbr+" '#2' ")
-    trees.append(tree)
+#     treefile = open(outputpath+'/'+filename+'_cladetrees.txt','w')
+#     for tree in trees:
+#         treefile.write(tree+'\n')
+#     treefile.close()
+# #
 
-    treefile = open(outputpath+'/'+filename+'_cladetrees.txt','w')
-    for tree in trees:
-        treefile.write(tree+'\n')
-    treefile.close()
-#
+# def MakeCladeTrees4Species(filename):
+#     """Create trees with switches for PAML analyses for the group in question (for branch-site model)
 
-def MakeCladeTrees4Species(filename):
-    """Create trees with switches for PAML analyses for the group in question (for branch-site model)
+#     """
 
-    """
+#     # Read tree
+#     treefile = open(inputpath+'/'+filename[:filename.find('dna')]+'phylip_phyml_tree.txt','r')
+#     tree = treefile.readline()
+#     treefile.close()
 
-    # Read tree
-    treefile = open(inputpath+'/'+filename[:filename.find('dna')]+'phylip_phyml_tree.txt','r')
-    tree = treefile.readline()
-    treefile.close()
+#     parts       = tree[:-2].replace(',',':').replace(')','').split(':')
+#     bimpabr = parts[1]
+#     bterrbr = parts[3]
+#     aflorbr = parts[5]
+#     amellbr = parts[7]
+#     interbr = float(parts[8])
 
-    parts       = tree[:-2].replace(',',':').replace(')','').split(':')
-    bimpabr = parts[1]
-    bterrbr = parts[3]
-    aflorbr = parts[5]
-    amellbr = parts[7]
-    interbr = float(parts[8])
+#     trees = []
 
-    trees = []
+#     # Tree 1: 3 internal branches under selection
+#     tree = "((BIMPA:%s,BTERR:%s):%.12f,(AFLOR:%s,AMELL:%s):%s);\n" % \
+#             (bimpabr, bterrbr, interbr/2, aflorbr+" '#1' ", amellbr+" '#1' ", "%.12f '#1' " % (interbr/2))
+#     trees.append(tree)
 
-    # Tree 1: 3 internal branches under selection
-    tree = "((BIMPA:%s,BTERR:%s):%.12f,(AFLOR:%s,AMELL:%s):%s);\n" % \
-            (bimpabr, bterrbr, interbr/2, aflorbr+" '#1' ", amellbr+" '#1' ", "%.12f '#1' " % (interbr/2))
-    trees.append(tree)
-
-    treefile = open(outputpath+'/'+filename+'_cladetrees.txt','w')
-    for tree in trees:
-        treefile.write(tree+'\n')
-    treefile.close()
-#
+#     treefile = open(outputpath+'/'+filename+'_cladetrees.txt','w')
+#     for tree in trees:
+#         treefile.write(tree+'\n')
+#     treefile.close()
+# #
 
 def MakeBranchSiteTrees(filename):
 
@@ -325,6 +367,10 @@ def MakeBranchSiteTrees(filename):
         MakeBranchSiteTrees5Species(filename)
     elif (species == 4):
         MakeBranchSiteTrees4Species(filename)
+    elif (species == 8):
+        MakeBranchSiteTrees9Species(filename)
+    elif (species == 9):
+        MakeBranchSiteTrees9Species(filename)
     else:
         sys.stdout.write('Invalid number of species\n')
         sys.exit()
@@ -390,18 +436,36 @@ def MakeSitesCTLFile(filename, ctlfile, winit):
     infile.close()
     outfile.close()
 
+    # Regular script
     script = open(outputpath+'/'+runname+'.sh','a')
     script.write('cd '+group+'_'+runname+'\ncodeml '+group+'_'+runname+'.ctl\ncd ..\n')
     script.close()
 
-    brutusscript = open(outputpath+'/'+runname+'.brutus.sh','a')
-    brutusscript.write('cd '+group+'_'+runname+"\nbsub -W%d:0 -R 'rusage[mem=1024]' -o %s" % (8, group+'_'+runname+'.brutus.out'))
-    brutusscript.write(' '+codeml_brutus+' '+group+'_'+runname+'.ctl\ncd ..\n')
-    brutusscript.close()
+    # Leonhard
+    leonhardscript = open(outputpath+'/'+runname+'.leonhard.sh','a')
+    leonhardscript.write('cd '+group+'_'+runname+"\nbsub -W%d:0 -R 'rusage[mem=1024]' -o %s" % (8, group+'_'+runname+'.out'))
+    leonhardscript.write(' '+codeml_leonhard+' '+group+'_'+runname+'.ctl\ncd ..\n')
+    leonhardscript.close()
 
-    brutuscleanup = open(outputpath+'/'+runname+'.brutusclean.sh','a')
-    brutuscleanup.write('rm '+group+'_'+runname+"/*.brutus.out\n")
-    brutuscleanup.close()
+    # Euler
+    eulerscript = open(outputpath+'/'+runname+'.euler.sh','a')
+    eulerscript.write('cd '+group+'_'+runname+"\nbsub -W%d:0 -R 'rusage[mem=1024]' -o %s" % (4, group+'_'+runname+'.out'))
+    eulerscript.write(' '+codeml_euler+' '+group+'_'+runname+'.ctl\ncd ..\n')
+    eulerscript.close()
+
+    # GDC
+    gdcscript = open(outputpath+'/'+runname+'.gdc.sh','a')
+    gdcscript.write('cd '+group+'_'+runname+'\n'+codeml_gdc+' '+group+'_'+runname+'.ctl\ncd ..\n')
+    gdcscript.close()
+
+    # brutusscript = open(outputpath+'/'+runname+'.brutus.sh','a')
+    # brutusscript.write('cd '+group+'_'+runname+"\nbsub -W%d:0 -R 'rusage[mem=1024]' -o %s" % (8, group+'_'+runname+'.brutus.out'))
+    # brutusscript.write(' '+codeml_brutus+' '+group+'_'+runname+'.ctl\ncd ..\n')
+    # brutusscript.close()
+
+    cleanup = open(outputpath+'/'+runname+'.clean.sh','a')
+    cleanup.write('rm '+group+'_'+runname+"/*.out\n")
+    cleanup.close()
 #
 
 
@@ -442,14 +506,31 @@ def MakeBranchCTLFile(filename, ctlfile, cladebranch, winit):
     script.write('cd '+group+'_'+runname+'\ncodeml '+group+'_'+runname+'.ctl\ncd ..\n')
     script.close()
 
-    brutusscript = open(outputpath+'/'+runname+'.brutus.sh','a')
-    brutusscript.write('cd '+group+'_'+runname+"\nbsub -W%d:0 -R 'rusage[mem=1024]' -o %s" % (1, group+'_'+runname+'.brutus.out'))
-    brutusscript.write(' '+codeml_brutus+' '+group+'_'+runname+'.ctl\ncd ..\n')
-    brutusscript.close()
+    # Leonhard
+    leonhardscript = open(outputpath+'/'+runname+'.leonhard.sh','a')
+    leonhardscript.write('cd '+group+'_'+runname+"\nbsub -W%d:0 -R 'rusage[mem=1024]' -o %s" % (8, group+'_'+runname+'.out'))
+    leonhardscript.write(' '+codeml_leonhard+' '+group+'_'+runname+'.ctl\ncd ..\n')
+    leonhardscript.close()
 
-    brutuscleanup = open(outputpath+'/'+runname+'.brutusclean.sh','a')
-    brutuscleanup.write('rm '+group+'_'+runname+"/*.brutus.out\n")
-    brutuscleanup.close()
+    # Euler
+    eulerscript = open(outputpath+'/'+runname+'.euler.sh','a')
+    eulerscript.write('cd '+group+'_'+runname+"\nbsub -W%d:0 -R 'rusage[mem=1024]' -o %s" % (4, group+'_'+runname+'.out'))
+    eulerscript.write(' '+codeml_euler+' '+group+'_'+runname+'.ctl\ncd ..\n')
+    eulerscript.close()
+
+    # GDC
+    gdcscript = open(outputpath+'/'+runname+'.gdc.sh','a')
+    gdcscript.write('cd '+group+'_'+runname+'\n'+codeml_gdc+' '+group+'_'+runname+'.ctl\ncd ..\n')
+    gdcscript.close()
+
+    # brutusscript = open(outputpath+'/'+runname+'.brutus.sh','a')
+    # brutusscript.write('cd '+group+'_'+runname+"\nbsub -W%d:0 -R 'rusage[mem=1024]' -o %s" % (8, group+'_'+runname+'.brutus.out'))
+    # brutusscript.write(' '+codeml_brutus+' '+group+'_'+runname+'.ctl\ncd ..\n')
+    # brutusscript.close()
+
+    cleanup = open(outputpath+'/'+runname+'.clean.sh','a')
+    cleanup.write('rm '+group+'_'+runname+"/*.out\n")
+    cleanup.close()
 #
 
 

@@ -85,16 +85,21 @@ def GetBest(pattern):
       #skipfile = open(inputpath+'/'+pattern.replace('*','-Skipped'),'w')
       outfile.write(header.strip()+'\tBest\n')
       #skipfile.write(header)
+      changed = 0
       for i in range(0,len(runslk[0])):
             maxidx = 0
             maxlk  = runslk[0][i]
-            sys.stdout.write('%d\t%.3f' % (i, maxlk))
+            sys.stdout.write('%d\t%7.3f' % (i, maxlk-runslk[0][i]))
             for j in range(1,len(runslk)):
-                  sys.stdout.write("\t%.3f" % runslk[j][i])
+                  sys.stdout.write("\t%7.3f" % (runslk[j][i]-runslk[0][i]))
                   if (runslk[j][i] > maxlk):
                         maxlk  = runslk[j][i]
                         maxidx = j
-            sys.stdout.write('\t - %.3f\t%d' % (maxlk, maxidx))
+            sys.stdout.write('\t - %7.3f\t%d' % (maxlk, maxidx))
+
+            if (maxidx != 0):
+                  changed += 1
+
 
             # Write output
             #if (maxlk == -999999):
@@ -104,6 +109,7 @@ def GetBest(pattern):
             sys.stdout.write('\n')
             outfile.write(runsdata[maxidx][i].strip()+'\t'+runids[maxidx]+'\n')
       #
+      sys.stdout.write("Changed %d\n" % changed)
       outfile.close()
       #skipfile.close()
 
