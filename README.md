@@ -7,10 +7,14 @@ Use these scripts at your own risk! They may need some tweaks or fixes for diffe
 
 ## Example workflows 
 
+- workflow4.sh: 4 taxa workflow
+- workflow8.sh: 8 taxa workflow
+- workflow9.sh: 9 taxa workflow
+
 
 ## Python scripts
 
-Pre-processing was already done by the GDC. Assume we start with coding sequence alignments of 4 taxa (tbrucei, lmajor, cbombi, cexpoeki). 
+Pre-processing was already done by the GDC. Assume we start with coding sequence alignments of 4 taxa (tbrucei, lmajor, cbombi, cexpoeki) or 8 or 9 taxa. Before running scripts taxa names need to be shortened to 9 or less characters. **This is a codeml restriction!** 
 
 
 - GetNewAlignments.py:
@@ -47,7 +51,7 @@ Pre-processing was already done by the GDC. Assume we start with coding sequence
 	- Branch-Site
 	- Clade models C and D (not used)
 
-	Trees for branch-site and clade models are hardcoded for 4- and 5-taxa trees in the paper (but can be easily changed).
+	Trees for branch-site model is hardcoded for 4- and 9-taxa trees (but can be easily changed).
 
 - ExtractParameter.py:
 	Extract parameters from the PAML output files into easily readable csv files.
@@ -55,16 +59,16 @@ Pre-processing was already done by the GDC. Assume we start with coding sequence
 - ExtractBest.py:
 	Looks at output files from ExtractParameters.py to extract the replicate with the maximum-likelihood for each model.
 
-- ExtractBEB.py:
+- ExtractBEB.py (not used):
 	Extract BEB posterior values from PAML branch-site and M8 models.
 
-- FormatBEB.py:
+- FormatBEB.py (not used):
 	Format BEB into BEB values for each of the sequences in the alignment. (So that the posterior estimate for the rate of evolution at each site in each full sequence (outside of the alignment) is known).
 
-- GetInterPro.py:
+- GetInterPro.py (not used):
 	Download domains returned by InterPro Scan for AA sequences. A lot of functions based on http://www.ebi.ac.uk/Tools/webservices/download_lients/python/suds/iprscan5_suds.py
 
-- MergeBEBInterPro.py:
+- MergeBEBInterPro.py (not used):
 	Merge the output from the BEB and Interpro scan into one file that can be plotted to see where sites under selection fall within domains.
 
 
@@ -73,7 +77,7 @@ Pre-processing was already done by the GDC. Assume we start with coding sequence
 Files needed as input for some scripts
 
 - PAML templates
-- Files containing sets of taxa for various analyses 
+- Files containing sets of taxa for various analyses (not really necessary)
 - Files containing topologies for various analyses  
 
 
